@@ -150,14 +150,8 @@ var Typebox = $.Class.create({
      *
      */
     toString: function() {
-      return this._element.attr("data-text");
+      return this._text;
     },
-    
-  }, {
-    /*
-     * properties
-     */
-    getset: [['BoxId', '_box_id']]
 });
 
 
@@ -230,11 +224,6 @@ var Typewriter = $.Class.create({
      * 
      */
     toString: function() {
-      return this.property('BoxId');
+      return this._box_id;
     }
-  }, {
-    /*
-     * properties
-     */
-    getset: [['BoxId', '_box_id']]
 });

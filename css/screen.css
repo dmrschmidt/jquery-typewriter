@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "Courier New";
+  font-size: 1em;
+}
+
+#typewriter {
+  z-index: 1;
+  position: absolute;
+  left: 8em;
+  top: 0;
+}
+
+h1 {
+  rotation: -2deg;
+  -webkit-transform: rotate(-2deg);
+  -moz-transform: rotate(-2deg);
+  background:#404040;
+  color:#303030;
+  text-shadow: -1px -1px 0px #101010, 1px 1px 0px #505050;
+  z-index: 2;
+  position: absolute;
+  left: -0.50em;
+  margin: 0;
+  padding-left: 1em;
+  padding-top: 0.9em;
+  top: -0.5em;
+  width: 14.5em;
+  border: 2px solid #303030;
+  height: 1.5em;
+/*  -moz-bottom-right-border-radius: 1em;*/
+  -webkit-border-bottom-right-radius: 0.5em;
+  box-shadow: 0px 0px 20px #000;
+}
+
+#explanation {
+  font-size: 0.8em;
+  padding: 0.5em;
+  padding-right: 1em;
+/*  text-shadow: -1px -1px 0px #333, 1px 0px 0px #666;*/
+  background-color: #fff;
+  color: #333;
+  z-index: 2;
+  position: absolute;
+  left: 27em;
+  top: 5em;
+  width: 35em;
+  height: 20em;
+  opacity: 0.7;
+  -webkit-border-radius: 0.5em;
+}
+
+#explanation h2 {
+  font-size: 1.8em;
+  text-align: right;
+}
+
+a {
+  background-color: #f9fdbd;
+  color: blue;
+  font-weight: bold;
+}
+
+a:hover {
+  background-color: #f5ff51;
+}
