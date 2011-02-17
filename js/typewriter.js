@@ -1,3 +1,19 @@
+var TIMEOUTS = new Array();
+TIMEOUTS['data-timeout-letter'] =  15;
+TIMEOUTS['data-timeout-word']   = 350;
+
+/*
+ * Returns the desired timeout for the given element (DOM object) and type
+ * (timeout-letter or timeout-wait). These have default values that will be
+ * returned if the given element doesn't have a valid data-timeout-XXX
+ * attribute set.
+ */
+function get_timeout(element, type, default_value) {
+  var timeout = parseInt(element.attr(type));
+  if(isNaN(timeout) || timeout <= 0) { timeout = default_value }
+  return timeout;
+}
+
 /**
  * Wraps an element that is to be filled with text.
  */
@@ -12,7 +28,7 @@ var Typebox = $.Class.create({
     /*
      * Wrap the passed element into a new Typebox.
      */
-    initialize: function(element, should_cycle) {
+    initialize: function(element, should_cycle, timeout_letter, timeout_wait) {
       this._fixed = "";
       this._current = "";
       this._position = 0;
@@ -24,6 +40,17 @@ var Typebox = $.Class.create({
       this._in_tag = false;
       this._element.html('');
       this._should_cycle = should_cycle;
+      this.set_timeouts(timeout_letter, timeout_wait);
+    },
+    
+    /*
+     * Sets the timeouts to use.
+     */
+    set_timeouts: function(timeout_letter, timeout_wait) {
+      this._timeout_letter = get_timeout(this._element,
+          'data-timeout-letter', timeout_letter);
+      this._timeout_wait = get_timeout(this._element,
+          'data-timeout-wait', timeout_wait);
     },
     
     /*
@@ -173,9 +200,9 @@ var Typebox = $.Class.create({
       if(this.should_pause()) {
         return parseInt(this._element.attr("data-prepause"));
       } else if(this.is_waiting()) {
-        return 350;
+        return this._timeout_wait;
       } else {
-        return 15;
+        return this._timeout_letter;
       }
     },
     
@@ -246,7 +273,14 @@ var Typewriter = $.Class.create({
      * Creates a Typebox instance from the given DOM object.
      */
     load_part: function(part) {
-      this._parts.push(new Typebox(part, this._should_cycle));
+      var timeout_letter = get_timeout(this._box, 'data-timeout-letter', TIMEOUTS['data-timeout-letter']);
+      var timeout_wait = get_timeout(this._box, 'data-timeout-wait', TIMEOUTS['data-timeout-wait']);
+      this._parts.push(new Typebox(
+        part,
+        this._should_cycle,
+        timeout_letter,
+        timeout_wait)
+      );
     },
     
     /*
