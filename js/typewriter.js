@@ -48,6 +48,8 @@ var Typebox = $.Class.create({
         var value = (this._iteration < (this._max_iterations - 1))
           ? Math.floor(Math.random() * 10)
           : this.current_char();
+        if(this.current_char() == ' ')
+          value = ' ';
         this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
         if(this._iteration == 0) {
           this._position++;
@@ -72,6 +74,19 @@ var Typebox = $.Class.create({
     },
     
     /*
+     * Quickly writes a tag.
+     */
+    write_tag: function() {
+      this._iteration = 0;
+      var next_char = this.current_char();
+      this._current = this._fixed + next_char;
+      $(this._element).html(this._current);
+      this._fixed = this._current;
+      this._position++;
+    },
+    
+    
+    /*
      * Returns true if this Typebox is finished printing it's text.
      */
     is_done: function() {
@@ -90,8 +105,15 @@ var Typebox = $.Class.create({
      */
     update: function() {
       if(!this.is_done()) {
-        this._current = this._fixed + this.get_char();
-        $(this._element).html(this._current);
+        var written_tag = false;
+        while(this.in_tag()) {
+          written_tag = true;
+          this.write_tag();
+        }
+        if(!this.is_done()) {
+          this._current = this._fixed + this.get_char();
+          $(this._element).html(this._current);
+        }
       }
       this._started = true;
       return this.is_done();
