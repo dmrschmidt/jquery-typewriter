@@ -24,13 +24,6 @@ var Typebox = $.Class.create({
     },
     
     /*
-     * Return the inner <var> tag, that will be replaced by the new text.
-     */
-    get_inner: function() {
-      return $(this._element.find("var").first());
-    },
-    
-    /*
      * Calculates and returns the next character to be displayed.
      */
     get_char: function() {
