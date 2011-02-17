@@ -7,10 +7,12 @@ var Typebox = $.Class.create({
      */
     _max_waiting : 10,
     _max_iterations: 5,
+    _possible_chars : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    
     /*
      * Wrap the passed element into a new Typebox.
      */
-    initialize: function(element) {
+    initialize: function(element, should_cycle) {
       this._fixed = "";
       this._current = "";
       this._position = 0;
@@ -21,6 +23,7 @@ var Typebox = $.Class.create({
       this._text = this._element.html();
       this._in_tag = false;
       this._element.html('');
+      this._should_cycle = should_cycle;
     },
     
     /*
@@ -31,16 +34,26 @@ var Typebox = $.Class.create({
     },
     
     /*
+     * Returns a randomly generated character from the list of all possible
+     * characters.
+     */
+    random_char: function() {
+      var index = Math.floor(Math.random() * this._possible_chars.length);
+      return this._possible_chars.charAt(index);
+    },
+    
+    /*
      * Returns true if the current character should be printed with other
      * random characters, before actually printing the correct char itself.
      * This is never the case for special characters, such as whitespaces.
      */
-    should_prefill: function() {
-      var should_prefill = (this._iteration < (this._max_iterations - 1)) &&
-        !(this.current_char() == ' ' ||
-          this.current_char() == "\n" ||
-          this.current_char() == "\r");
-      return should_prefill;
+    should_cycle: function() {
+      var should_cycle = this._should_cycle &&
+        (this._iteration < (this._max_iterations - 1)) &&
+          !(this.current_char() == ' ' ||
+            this.current_char() == "\n" ||
+            this.current_char() == "\r");
+      return should_cycle;
     },
     
     /*
@@ -61,8 +74,8 @@ var Typebox = $.Class.create({
      * What to do when we are writing actual text.
      */
     handle_writing: function() {
-      var value = this.should_prefill()
-        ? Math.floor(Math.random() * 10)
+      var value = this.should_cycle()
+        ? this.random_char()
         : this.current_char();
       this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
       if(this._iteration == 0) {
@@ -118,7 +131,8 @@ var Typebox = $.Class.create({
      * Returns true if this Typebox is currently in waiting mode.
      */
     is_waiting: function() {
-      return this._element.attr("data-prefill") == "true" && this._waited < this._max_waiting;
+      return this._element.attr("data-prefill") == "true" &&
+        this._waited < this._max_waiting;
     },
     
     /*
@@ -161,7 +175,7 @@ var Typebox = $.Class.create({
       } else if(this.is_waiting()) {
         return 350;
       } else {
-        return 10;
+        return 15;
       }
     },
     
@@ -184,6 +198,7 @@ var Typewriter = $.Class.create({
      */
     init: function() {
       this._parts = [];
+      this._should_cycle = this._box.attr("data-cycling") != "false";
       this._max_iterations = parseInt(this._box.attr("data-iterations"));
       this.load_parts();
       this.autostart();
@@ -231,7 +246,7 @@ var Typewriter = $.Class.create({
      * Creates a Typebox instance from the given DOM object.
      */
     load_part: function(part) {
-      this._parts.push(new Typebox(part));
+      this._parts.push(new Typebox(part, this._should_cycle));
     },
     
     /*
@@ -247,7 +262,8 @@ var Typewriter = $.Class.create({
      * Returns the Typebox instance that is currently in update progress.
      */
     get_part: function() {
-      if(this._current_part == null || (this._current_part.is_done() && this._parts.length > 0))
+      if(this._current_part == null || (this._current_part.is_done() && 
+          this._parts.length > 0))
         this._current_part = this._parts.shift();
       return this._current_part;
     },
@@ -275,8 +291,4 @@ $(document).ready(function() {
   $(".typewriter").each(function(index, element) {
     typewriters.push(new Typewriter(element));
   });
-  // var typewriter1 = new Typewriter("#speech_bubble_head", "");
-  // var typewriter2 = new Typewriter("#explanation", "");
-  // typewriter1.type();
-  // typewriter2.type();
 });
