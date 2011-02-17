@@ -1,1 +1,56 @@
-My GitHub Page
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <script type="text/javascript" src="./js/jquery.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.class.js"></script>
+  <script type="text/javascript" src="./js/typewriter.js"></script>
+  <link rel="stylesheet" href="./css/screen.css" type="text/css" media="screen" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>jQuery typewriter demo</title>
+</head>
+<body>
+
+  <h1 class="typewriter" id="speech_bubble_head" data-iterations="20">
+    <span class="typewrite">jQuery typewriter</span>
+    <span class="typewrite" data-prepause="1000">demo.</span>
+  </h1>
+  
+  <div id="explanation" class="typewriter">
+    <h2>what is jQuery typewriter?</h2>
+    <div class="typewrite">
+      <p>
+        The <i>jQuery typewriter</i> allows you to easily add the effect of an
+        old-shool typewriter writing your text to the page.
+      </p>
+      <p>
+        It is:
+        <ul>
+          <li>highly customizable in it's behaviour and output</li>
+          <li>completely unobtrusive</li>
+          <li>very small in size (only 4 kB)</li>
+          <li>using latest HTML5 technology</li>
+          <li>yet still compatible with old browsers</li>
+        </ul>
+      </p>
+      <p>
+        And it's free! So
+        <a href="">download jQuery typewriter</a> right now!
+      </p>
+    </div>
+  </div>
+  
+  <img src="images/cc_typewriter.jpeg" id="typewriter" width="700" height="650" alt="typewriter" />
+  
+  <div class="speech_bubble" data-iterations="20">
+    <div class="bubble_text">
+      <span class="fill_text" data-text="Jim: greets from the NY boat cruise" data-prefill="true"><var></var></span><br />
+      <div id="second_line">
+        <span class="fill_text" data-text="destination: " data-prepause="800"><var></var></span>
+        <span class="fill_text" data-text="Berlin, Germany" data-prepause="1200" data-prefill="true"><var></var></span>
+      </div>
+    </div>
+    <div class="bubble_arrow"></div>
+  </div>
+
+</body>
+</html>
