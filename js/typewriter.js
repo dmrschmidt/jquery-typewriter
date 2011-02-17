@@ -18,7 +18,9 @@ var Typebox = $.Class.create({
       this._waited = 0;
       this._started = false;
       this._element = $(element);
-      this._text = this._element.attr("data-text");
+      this._text = this._element.html();
+      this._in_tag = false;
+      this._element.html('');
     },
     
     /*
@@ -75,7 +77,7 @@ var Typebox = $.Class.create({
     update: function() {
       if(!this.is_done()) {
         this._current = this._fixed + this.get_char();
-        this.get_inner().replaceWith('<var>' + this._current + '</var>');
+        $(this._element).html(this._current);
       }
       this._started = true;
       return this.is_done();
@@ -164,7 +166,7 @@ var Typewriter = $.Class.create({
      * Loads all the Typebox instances that are available.
      */
     load_parts: function() {
-      var boxes = this._box.find(".fill_text");
+      var boxes = this._box.find(".typewrite");
       var parent = this;
       $.each(boxes, function(index, element) { parent.load_part(element) });
     },
