@@ -24,6 +24,13 @@ var Typebox = $.Class.create({
     },
     
     /*
+     * Returns the current (real) character that is about to be written.
+     */
+    current_char: function() {
+      return this._text[this._position];
+    },
+    
+    /*
      * Calculates and returns the next character to be displayed.
      */
     get_char: function() {
@@ -40,7 +47,7 @@ var Typebox = $.Class.create({
       } else {
         var value = (this._iteration < (this._max_iterations - 1))
           ? Math.floor(Math.random() * 10)
-          : this._text[this._position];
+          : this.current_char();
         this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
         if(this._iteration == 0) {
           this._position++;
@@ -48,6 +55,20 @@ var Typebox = $.Class.create({
         }
       }
       return value;
+    },
+    
+    /*
+     * Returns true, when currently an HTML tag needs to be written.
+     * Needed to quickly jump over these, to avoid ugliness.
+     */
+    in_tag: function() {
+      var current = this.current_char();
+      this._in_tag = this._in_tag || current == '<';
+      this._in_tag = this._in_tag && !this.is_waiting();
+      if(this._position > 0) {
+        this._in_tag = this._in_tag && this._text[this._position-1] != '>';
+      }
+      return this._in_tag;
     },
     
     /*
