@@ -44,28 +44,44 @@ var Typebox = $.Class.create({
     },
     
     /*
+     * What to do when we are waiting.
+     */
+    handle_waiting: function() {
+      var value = '.';
+      this._fixed = this._current;
+      // if waiting is finished, reset the text field
+      if(++this._waited == this._max_waiting) {
+        this._fixed = "";
+        value = '';
+      }
+      return value;
+    },
+    
+    /*
+     * What to do when we are writing actual text.
+     */
+    handle_writing: function() {
+      var value = this.should_prefill()
+        ? Math.floor(Math.random() * 10)
+        : this.current_char();
+      this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
+      if(this._iteration == 0) {
+        this._position++;
+        this._fixed = this._current;
+      }
+      return value;
+    },
+    
+    /*
      * Calculates and returns the next character to be displayed.
      */
     get_char: function() {
-      // display dots if in "waiting" mode
       if(this.is_waiting()) {
-        var value = '.';
-        this._fixed = this._current;
-        // if waiting is finished, reset the text field
-        if(++this._waited == this._max_waiting) {
-          this._fixed = "";
-          value = '';
-        }
-      // display random letter or real character when not waiting
+        // display dots if in "waiting" mode
+        var value = this.handle_waiting();
       } else {
-        var value = this.should_prefill()
-          ? Math.floor(Math.random() * 10)
-          : this.current_char();
-        this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
-        if(this._iteration == 0) {
-          this._position++;
-          this._fixed = this._current;
-        }
+        // display random letter or real character when not waiting
+        var value = this.handle_writing();
       }
       return value;
     },
