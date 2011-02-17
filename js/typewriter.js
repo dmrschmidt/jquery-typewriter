@@ -180,19 +180,42 @@ var Typebox = $.Class.create({
  */
 var Typewriter = $.Class.create({
     /*
-     * properties
+     * Common initializer functions.
      */
+    init: function() {
+      this._parts = [];
+      this._max_iterations = parseInt(this._box.attr("data-iterations"));
+      this.load_parts();
+      this.autostart();
+    },
+    
+     /*
+      * Constructs a new typewriter for the given DOM Object ID.
+      */
+     initialize: function(element) {
+       this._box_id = element.id;
+       this._box = $(element);
+       this.init();
+     },
     
     /*
      * Constructs a new typewriter for the given DOM Object ID.
      */
     initialize: function(box_id, activator) {
-      this._parts = [];
       this._box_id = box_id;
       this._box = $(box_id);
-      this._max_iterations = parseInt(this._box.attr("data-iterations"));
-      this.load_parts();
+      this.init();
       $('#'+activator).click(jQuery.proxy(this.register, this));
+    },
+    
+    /*
+     * Performs an automatic start unless configured otherwise.
+     * By default this is enabled, but it can be disabled by adding
+     * data-autostart="false" to the main typewriter DOM object
+     * (the one with class 'typewriter').
+     */
+    autostart: function() {
+      if(this._box.attr("data-autostart") != "false") { this.type(); }
     },
     
     /*
@@ -245,4 +268,15 @@ var Typewriter = $.Class.create({
     toString: function() {
       return this._box_id;
     }
+});
+
+$(document).ready(function() {
+  var typewriters = [];
+  $(".typewriter").each(function(index, element) {
+    typewriters.push(new Typewriter(element));
+  });
+  // var typewriter1 = new Typewriter("#speech_bubble_head", "");
+  // var typewriter2 = new Typewriter("#explanation", "");
+  // typewriter1.type();
+  // typewriter2.type();
 });
