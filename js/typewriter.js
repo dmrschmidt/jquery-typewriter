@@ -31,6 +31,19 @@ var Typebox = $.Class.create({
     },
     
     /*
+     * Returns true if the current character should be printed with other
+     * random characters, before actually printing the correct char itself.
+     * This is never the case for special characters, such as whitespaces.
+     */
+    should_prefill: function() {
+      var should_prefill = (this._iteration < (this._max_iterations - 1)) &&
+        !(this.current_char() == ' ' ||
+          this.current_char() == "\n" ||
+          this.current_char() == "\r");
+      return should_prefill;
+    },
+    
+    /*
      * Calculates and returns the next character to be displayed.
      */
     get_char: function() {
@@ -45,14 +58,9 @@ var Typebox = $.Class.create({
         }
       // display random letter or real character when not waiting
       } else {
-        var value = (this._iteration < (this._max_iterations - 1))
+        var value = this.should_prefill()
           ? Math.floor(Math.random() * 10)
           : this.current_char();
-        var current = this.current_char();
-        if(this.current_char() == ' ' || this.current_char() == "\n" || this.current_char() == "\r") {
-          value = current;
-          // this._iteration = 0;
-        }
         this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
         if(this._iteration == 0) {
           this._position++;
