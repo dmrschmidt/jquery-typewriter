@@ -6,7 +6,7 @@ var Typebox = $.Class.create({
      * properties
      */
     _max_waiting : 10,
-    _max_iterations: 3,    
+    _max_iterations: 5,
     /*
      * Wrap the passed element into a new Typebox.
      */
@@ -49,8 +49,10 @@ var Typebox = $.Class.create({
           ? Math.floor(Math.random() * 10)
           : this.current_char();
         var current = this.current_char();
-        if(this.current_char() == ' ' || this.current_char() == "\n" || this.current_char() == "\r")
-          value = ' ';
+        if(this.current_char() == ' ' || this.current_char() == "\n" || this.current_char() == "\r") {
+          value = current;
+          // this._iteration = 0;
+        }
         this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
         if(this._iteration == 0) {
           this._position++;
