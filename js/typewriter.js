@@ -48,7 +48,8 @@ var Typebox = $.Class.create({
         var value = (this._iteration < (this._max_iterations - 1))
           ? Math.floor(Math.random() * 10)
           : this.current_char();
-        if(this.current_char() == ' ')
+        var current = this.current_char();
+        if(this.current_char() == ' ' || this.current_char() == "\n" || this.current_char() == "\r")
           value = ' ';
         this._iteration = (this._iteration + 1) % (this._max_iterations + 1);
         if(this._iteration == 0) {
@@ -65,11 +66,7 @@ var Typebox = $.Class.create({
      */
     in_tag: function() {
       var current = this.current_char();
-      this._in_tag = this._in_tag || current == '<';
-      this._in_tag = this._in_tag && !this.is_waiting();
-      if(this._position > 0) {
-        this._in_tag = this._in_tag && this._text[this._position-1] != '>';
-      }
+      this._in_tag = (this._in_tag || current == '<') && current != '>';
       return this._in_tag;
     },
     
@@ -77,9 +74,7 @@ var Typebox = $.Class.create({
      * Quickly writes a tag.
      */
     write_tag: function() {
-      this._iteration = 0;
-      var next_char = this.current_char();
-      this._current = this._fixed + next_char;
+      this._current = this._fixed + this.current_char();
       $(this._element).html(this._current);
       this._fixed = this._current;
       this._position++;
@@ -105,11 +100,9 @@ var Typebox = $.Class.create({
      */
     update: function() {
       if(!this.is_done()) {
-        var written_tag = false;
-        while(this.in_tag()) {
-          written_tag = true;
-          this.write_tag();
-        }
+        // skip any tags quickly
+        if(this.in_tag()) do { this.write_tag(); } while(this.in_tag())
+        // in case we skipped a tag, we need to verify we're not done again
         if(!this.is_done()) {
           this._current = this._fixed + this.get_char();
           $(this._element).html(this._current);
