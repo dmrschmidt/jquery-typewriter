@@ -226,23 +226,17 @@ var Typebox = $.Class.create({
  * by calling their update methods repetitively.
  */
 var Typewriter = $.Class.create({
-    /*
-     * Common initializer functions.
-     */
-    init: function() {
-      this._parts = [];
-      this._should_cycle = this._box.attr("data-cycling") != "false";
-      this.load_parts();
-      this.autostart();
-    },
-    
      /*
       * Constructs a new typewriter for the given DOM Object ID.
       */
      initialize: function(element) {
+       this._started = false;
        this._box_id = element.id;
        this._box = $(element);
-       this.init();
+       this._parts = [];
+       this._should_cycle = this._box.attr("data-cycling") != "false";
+       this.load_parts();
+       this.autostart();
      },
     
     /*
@@ -257,7 +251,7 @@ var Typewriter = $.Class.create({
       handlers.each(function(index, element) {
         var to_start = $(element).attr("data-start-typewriter");
         if(to_start == box.attr('id')) {
-          $(element).click(jQuery.proxy(self.type, self));
+          $(element).click(jQuery.proxy(self.start_typing, self));
         }
       });
     },
@@ -317,6 +311,17 @@ var Typewriter = $.Class.create({
           this._parts.length > 0))
         this._current_part = this._parts.shift();
       return this._current_part;
+    },
+    
+    /*
+     * Call this method externally to start the typing. Here we can assure
+     * #type() is only called ONCE, to avoid timing problems.
+     */
+    start_typing: function() {
+      if(!this._started) {
+        this._started = true;
+        this.type();
+      }
     },
     
     /*
