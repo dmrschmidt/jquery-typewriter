@@ -273,8 +273,10 @@ var Typewriter = $.Class.create({
      * Creates a Typebox instance from the given DOM object.
      */
     load_part: function(part) {
-      var timeout_letter = get_timeout(this._box, 'data-timeout-letter', TIMEOUTS['data-timeout-letter']);
-      var timeout_wait = get_timeout(this._box, 'data-timeout-wait', TIMEOUTS['data-timeout-wait']);
+      var timeout_letter = get_timeout(this._box, 'data-timeout-letter',
+          TIMEOUTS['data-timeout-letter']);
+      var timeout_wait = get_timeout(this._box, 'data-timeout-wait',
+          TIMEOUTS['data-timeout-wait']);
       this._parts.push(new Typebox(
         part,
         this._should_cycle,

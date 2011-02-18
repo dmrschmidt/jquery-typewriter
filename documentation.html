@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <script type="text/javascript" src="./js/jquery.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.class.js"></script>
+  <script type="text/javascript" src="./js/typewriter.min.js"></script>
+  <script type='text/javascript' src="./js/flexcroll.js"></script>
+  <link rel="stylesheet" href="./css/flexcrollstyles.css" type="text/css" />
+  <link rel="stylesheet" href="./css/screen.css" type="text/css" media="screen" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>jQuery typewriter documentation</title>
+</head>
+<body>
+
+  <h1 class="typewriter" id="speech_bubble_head" data-iterations="20" data-cycling="false" data-timeout-letter="10">
+    <span class="typewrite" >jQuery typewriter</span>
+    <span class="typewrite" data-timeout-letter="50" data-prepause="1000">docs.</span>
+  </h1>
+  
+  <ul id="navigation">
+    <li><a href="./index.html">home</a></li>
+    <li><a href="./documentation.html" class="active">documentation</a></li>
+    <li><a href="https://github.com/metzeltiger/jquery-typewriter" class="download">download</a></li>
+  </ul>
+  
+  <div id="documentation" class='flexcroll'>
+    <h2>jQuery typewriter documentation</h2>
+    <h3>installing it</h3>
+    <p>
+      To start using <i>jQuery typewriter</i> simply
+      <a href="https://github.com/metzeltiger/jquery-typewriter">download</a>,
+      unzip it and put the following code into your &lt;head&gt; tag.<br />
+<pre>&lt;script type="text/javascript" src="./js/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./js/jquery.class.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="./js/typewriter.min.js"&gt;&lt;/script&gt;</pre>
+    </p>
+    <h3>running it</h3>
+    <p>
+      After you did that, all you need to do is take any element you want to
+      use the typewriter with and add the <i>class="typewriter"</i> to it.
+      <p>That's it? Yes... That's it!</p>
+    </p>
+    <h3>mastering it</h3>
+    <p>
+      Now that you installed it and have your first <i>jQuery typewriter</i>
+      up and runnung, you probably want to know how you can customize it to
+      your liking. And guess what, there are quite a few possibilities for
+      that.
+    </p>
+    <h4>general info</h4>
+    <p>
+      By default, the whole content of all <code>class="typewriter"</code>
+      elements will be written in a typewriter way. However, if you don't want
+      all elements to behave the same or even want elements that don't get
+      animated at all, the only thing you need to do, is to provide these
+      elements with <code>class="typewrite"</code>.<br />
+      If there is at least one element as a child of your typewriter with
+      this class, then only these elements will be animated.
+    </p>
+    <h4>custom configuration</h4>
+    <p>
+      All configuration is done using custom HTML5 data attributes. Just add
+      these to any element you want to manipulate and there's no need to touch
+      any line of JS. Sweet, innit?
+    </p>
+  </div>
+  
+  <img src="images/cc_typewriter.jpeg" id="typewriter" width="700" height="650" alt="typewriter" />
+  
+  <div class="speech_bubble" data-iterations="20">
+    <div class="bubble_text">
+      <span class="fill_text" data-text="Jim: greets from the NY boat cruise" data-prefill="true"><var></var></span><br />
+      <div id="second_line">
+        <span class="fill_text" data-text="destination: " data-prepause="800"><var></var></span>
+        <span class="fill_text" data-text="Berlin, Germany" data-prepause="1200" data-prefill="true"><var></var></span>
+      </div>
+    </div>
+    <div class="bubble_arrow"></div>
+  </div>
+
+</body>
+</html>
