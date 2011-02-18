@@ -1,6 +1,11 @@
-var TIMEOUTS = new Array();
-TIMEOUTS['data-timeout-letter'] =  15;
-TIMEOUTS['data-timeout-word']   = 350;
+/*
+ * jQuery typewriter by Dennis Schmidt
+ * free download at: http://metzeltiger.github.com/jquery-typewriter/
+ */
+var DEFAULTS = new Array();
+DEFAULTS['data-timeout-letter'] =  15;
+DEFAULTS['data-timeout-wait']   = 100;
+DEFAULTS['data-iterations']     =   5;
 
 /*
  * Returns the desired timeout for the given element (DOM object) and type
@@ -8,7 +13,7 @@ TIMEOUTS['data-timeout-word']   = 350;
  * returned if the given element doesn't have a valid data-timeout-XXX
  * attribute set.
  */
-function get_timeout(element, type, default_value) {
+function get_value(element, type, default_value) {
   var timeout = parseInt(element.attr(type));
   if(isNaN(timeout) || timeout <= 0) { timeout = default_value }
   return timeout;
@@ -21,14 +26,14 @@ var Typebox = $.Class.create({
     /*
      * properties
      */
-    _max_waiting : 10,
-    _max_iterations: 5,
+    _max_waiting : 15,
     _possible_chars : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
     
     /*
      * Wrap the passed element into a new Typebox.
      */
-    initialize: function(element, should_cycle, timeout_letter, timeout_wait) {
+    initialize: function(element, should_cycle, timeout_letter, timeout_wait,
+          max_iterations) {
       this._fixed = "";
       this._current = "";
       this._position = 0;
@@ -40,6 +45,7 @@ var Typebox = $.Class.create({
       this._in_tag = false;
       this._element.html('');
       this._should_cycle = should_cycle;
+      this._max_iterations = max_iterations;
       this.set_timeouts(timeout_letter, timeout_wait);
     },
     
@@ -47,9 +53,9 @@ var Typebox = $.Class.create({
      * Sets the timeouts to use.
      */
     set_timeouts: function(timeout_letter, timeout_wait) {
-      this._timeout_letter = get_timeout(this._element,
+      this._timeout_letter = get_value(this._element,
           'data-timeout-letter', timeout_letter);
-      this._timeout_wait = get_timeout(this._element,
+      this._timeout_wait = get_value(this._element,
           'data-timeout-wait', timeout_wait);
     },
     
@@ -226,7 +232,6 @@ var Typewriter = $.Class.create({
     init: function() {
       this._parts = [];
       this._should_cycle = this._box.attr("data-cycling") != "false";
-      this._max_iterations = parseInt(this._box.attr("data-iterations"));
       this.load_parts();
       this.autostart();
     },
@@ -241,13 +246,29 @@ var Typewriter = $.Class.create({
      },
     
     /*
-     * Constructs a new typewriter for the given DOM Object ID.
+     * Gets a list of DOM objects with class="typewriter-starter", and
+     * registers those with a value of data-start-typewriter identical to it's
+     * own ID as it's start handlers.
+     * Clicking on any of these items will then start the typewriter.
      */
-    initialize: function(box_id, activator) {
-      this._box_id = box_id;
-      this._box = $(box_id);
-      this.init();
-      $('#'+activator).click(jQuery.proxy(this.register, this));
+    register_start_handlers: function(handlers) {
+      var self = this;
+      var box = this._box;
+      handlers.each(function(index, element) {
+        var to_start = $(element).attr("data-start-typewriter");
+        if(to_start == box.attr('id')) {
+          $(element).click(jQuery.proxy(self.type, self));
+        }
+      });
+    },
+    
+    /*
+     * Returns true when the typewriter shall start automatically (which is)
+     * the default behaviour, unless overwritten by setting data-autostart
+     * to false.
+     */
+    shall_autostart: function() {
+      return this._box.attr("data-autostart") != "false";
     },
     
     /*
@@ -257,31 +278,25 @@ var Typewriter = $.Class.create({
      * (the one with class 'typewriter').
      */
     autostart: function() {
-      if(this._box.attr("data-autostart") != "false") { this.type(); }
-    },
-    
-    /*
-     * Registers the document's click functionality.
-     */
-    register: function() {
-      if(this._box.is(":hidden")) {
-        this._box.show("fast", jQuery.proxy(this.type, this));
-      }
+       if(this.shall_autostart()) { this.type(); }
     },
     
     /*
      * Creates a Typebox instance from the given DOM object.
      */
     load_part: function(part) {
-      var timeout_letter = get_timeout(this._box, 'data-timeout-letter',
-          TIMEOUTS['data-timeout-letter']);
-      var timeout_wait = get_timeout(this._box, 'data-timeout-wait',
-          TIMEOUTS['data-timeout-wait']);
+      var timeout_letter = get_value(this._box, 'data-timeout-letter',
+          DEFAULTS['data-timeout-letter']);
+      var timeout_wait = get_value(this._box, 'data-timeout-wait',
+          DEFAULTS['data-timeout-wait']);
+      var max_iterations = get_value(this._box, 'data-iterations',
+          DEFAULTS['data-iterations']);
       this._parts.push(new Typebox(
         part,
         this._should_cycle,
         timeout_letter,
-        timeout_wait)
+        timeout_wait,
+        max_iterations)
       );
     },
     
@@ -322,9 +337,18 @@ var Typewriter = $.Class.create({
     }
 });
 
+/*
+ * perform some initializations
+ */
 $(document).ready(function() {
   var typewriters = [];
+  var handlers = $(".typewriter-starter");
   $(".typewriter").each(function(index, element) {
-    typewriters.push(new Typewriter(element));
+    var typewriter = new Typewriter(element);
+    // if it does not start on it's own, define a start handler
+    if(!typewriter.shall_autostart()) {
+      typewriter.register_start_handlers(handlers);
+    }
+    typewriters.push(typewriter);
   });
 });

@@ -49,19 +49,70 @@
     </p>
     <h4>general info</h4>
     <p>
-      By default, the whole content of all <code>class="typewriter"</code>
+      By default, the whole content of all
+      <pre>class="typewriter"</pre>
       elements will be written in a typewriter way. However, if you don't want
       all elements to behave the same or even want elements that don't get
       animated at all, the only thing you need to do, is to provide these
-      elements with <code>class="typewrite"</code>.<br />
+      elements with
+      <pre>class="typewrite"</pre>
       If there is at least one element as a child of your typewriter with
       this class, then only these elements will be animated.
     </p>
-    <h4>custom configuration</h4>
     <p>
       All configuration is done using custom HTML5 data attributes. Just add
       these to any element you want to manipulate and there's no need to touch
       any line of JS. Sweet, innit?
+    </p>
+    <h4>controlling the start</h4>
+    <p>
+      By default all typewriter text will be instantly written out after the
+      page has completed loading. If you <i>don't</i> want this for a any
+      typewriter, simply add the attribute
+      <pre>data-autostart="false"</pre>
+      to your typewriter element. It will then be excluded from the list of
+      automatically started typewriters and you have to start it manually.<br />
+      You can use any (clickable) DOM element to start the animation by
+      simply adding
+      <pre>class="typewriter-starter" data-start-typewriter="TYPEWRITER_ID"</pre>
+      to the element you want to use. Just replace <i>TYPEWRITER_ID</i> with
+      the actual ID of the typewriter you want to control. It will then be
+      started when the user clicks on that element you specified.
+    </p>
+    <h4>letting it cycle</h4>
+    <p>
+      You'll notice, that by default each typewriter does some random
+      "letter-cycling" animations before actually printing a letter and
+      continuing on to the next one.<br />
+      Firstly, you can control how many letters shall be cycled before the
+      actual letter is printed. Do this by setting a value for
+      <pre>data-iterations="20"</pre>
+      You can also completely disable this cycling, by adding to the element
+      <pre>data-cycling="false"</pre>
+    </p>
+    <h4>controlling the speed</h4>
+    <p>
+      Is the typewriter writing too fast or too slow for you? No worries. The
+      delay between printing each letter can be customized by setting the
+      attribute a time value in ms (mili seconds) like so
+      <pre>data-timeout-letter="15"</pre>
+      And if you want to put some emphasize on a certain part, you can also
+      add a custom pause to that element, that is held before printing it.
+      Simply specify the following attribute for that, again, with a time
+      value in ms
+      <pre>data-prepause="1000"</pre>
+    </p>
+    <h4>let it load</h4>
+    <p>
+      Maybe you want to pretend something is currently loading in the
+      background. And of course, there's help for you. Simply specify
+      <pre>data-prefill="true"</pre>
+      and let the text show a loading animation before printing the actual
+      text. This loading is indicated by dots being written at the place where
+      the text will appear afterwards.<br />
+      You can also control the time to wait between each dot, by simply
+      setting a value (in ms) for
+      <pre>data-timeout-wait="100"</pre>
     </p>
   </div>
   
