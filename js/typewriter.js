@@ -246,13 +246,29 @@ var Typewriter = $.Class.create({
      },
     
     /*
-     * Constructs a new typewriter for the given DOM Object ID.
+     * Gets a list of DOM objects with class="typewriter-starter", and
+     * registers those with a value of data-start-typewriter identical to it's
+     * own ID as it's start handlers.
+     * Clicking on any of these items will then start the typewriter.
      */
-    initialize: function(box_id, activator) {
-      this._box_id = box_id;
-      this._box = $(box_id);
-      this.init();
-      $('#'+activator).click(jQuery.proxy(this.register, this));
+    register_start_handlers: function(handlers) {
+      var self = this;
+      var box = this._box;
+      handlers.each(function(index, element) {
+        var to_start = $(element).attr("data-start-typewriter");
+        if(to_start == box.attr('id')) {
+          $(element).click(jQuery.proxy(self.type, self));
+        }
+      });
+    },
+    
+    /*
+     * Returns true when the typewriter shall start automatically (which is)
+     * the default behaviour, unless overwritten by setting data-autostart
+     * to false.
+     */
+    shall_autostart: function() {
+      return this._box.attr("data-autostart") != "false";
     },
     
     /*
@@ -262,16 +278,7 @@ var Typewriter = $.Class.create({
      * (the one with class 'typewriter').
      */
     autostart: function() {
-      if(this._box.attr("data-autostart") != "false") { this.type(); }
-    },
-    
-    /*
-     * Registers the document's click functionality.
-     */
-    register: function() {
-      if(this._box.is(":hidden")) {
-        this._box.show("fast", jQuery.proxy(this.type, this));
-      }
+       if(this.shall_autostart()) { this.type(); }
     },
     
     /*
@@ -330,9 +337,18 @@ var Typewriter = $.Class.create({
     }
 });
 
+/*
+ * perform some initializations
+ */
 $(document).ready(function() {
   var typewriters = [];
+  var handlers = $(".typewriter-starter");
   $(".typewriter").each(function(index, element) {
-    typewriters.push(new Typewriter(element));
+    var typewriter = new Typewriter(element);
+    // if it does not start on it's own, define a start handler
+    if(!typewriter.shall_autostart()) {
+      typewriter.register_start_handlers(handlers);
+    }
+    typewriters.push(typewriter);
   });
 });
