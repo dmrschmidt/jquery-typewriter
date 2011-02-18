@@ -1,3 +1,7 @@
+/*
+ * jQuery typewriter by Dennis Schmidt
+ * free download at: http://metzeltiger.github.com/jquery-typewriter/
+ */
 var TIMEOUTS = new Array();
 TIMEOUTS['data-timeout-letter'] =  15;
 TIMEOUTS['data-timeout-word']   = 350;
