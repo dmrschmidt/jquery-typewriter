@@ -2,9 +2,10 @@
  * jQuery typewriter by Dennis Schmidt
  * free download at: http://metzeltiger.github.com/jquery-typewriter/
  */
-var TIMEOUTS = new Array();
-TIMEOUTS['data-timeout-letter'] =  15;
-TIMEOUTS['data-timeout-word']   = 350;
+var DEFAULTS = new Array();
+DEFAULTS['data-timeout-letter'] =  15;
+DEFAULTS['data-timeout-wait']   = 100;
+DEFAULTS['data-iterations']     =   5;
 
 /*
  * Returns the desired timeout for the given element (DOM object) and type
@@ -12,7 +13,7 @@ TIMEOUTS['data-timeout-word']   = 350;
  * returned if the given element doesn't have a valid data-timeout-XXX
  * attribute set.
  */
-function get_timeout(element, type, default_value) {
+function get_value(element, type, default_value) {
   var timeout = parseInt(element.attr(type));
   if(isNaN(timeout) || timeout <= 0) { timeout = default_value }
   return timeout;
@@ -25,14 +26,14 @@ var Typebox = $.Class.create({
     /*
      * properties
      */
-    _max_waiting : 10,
-    _max_iterations: 5,
+    _max_waiting : 15,
     _possible_chars : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
     
     /*
      * Wrap the passed element into a new Typebox.
      */
-    initialize: function(element, should_cycle, timeout_letter, timeout_wait) {
+    initialize: function(element, should_cycle, timeout_letter, timeout_wait,
+          max_iterations) {
       this._fixed = "";
       this._current = "";
       this._position = 0;
@@ -44,6 +45,7 @@ var Typebox = $.Class.create({
       this._in_tag = false;
       this._element.html('');
       this._should_cycle = should_cycle;
+      this._max_iterations = max_iterations;
       this.set_timeouts(timeout_letter, timeout_wait);
     },
     
@@ -51,9 +53,9 @@ var Typebox = $.Class.create({
      * Sets the timeouts to use.
      */
     set_timeouts: function(timeout_letter, timeout_wait) {
-      this._timeout_letter = get_timeout(this._element,
+      this._timeout_letter = get_value(this._element,
           'data-timeout-letter', timeout_letter);
-      this._timeout_wait = get_timeout(this._element,
+      this._timeout_wait = get_value(this._element,
           'data-timeout-wait', timeout_wait);
     },
     
@@ -230,7 +232,6 @@ var Typewriter = $.Class.create({
     init: function() {
       this._parts = [];
       this._should_cycle = this._box.attr("data-cycling") != "false";
-      this._max_iterations = parseInt(this._box.attr("data-iterations"));
       this.load_parts();
       this.autostart();
     },
@@ -277,15 +278,18 @@ var Typewriter = $.Class.create({
      * Creates a Typebox instance from the given DOM object.
      */
     load_part: function(part) {
-      var timeout_letter = get_timeout(this._box, 'data-timeout-letter',
-          TIMEOUTS['data-timeout-letter']);
-      var timeout_wait = get_timeout(this._box, 'data-timeout-wait',
-          TIMEOUTS['data-timeout-wait']);
+      var timeout_letter = get_value(this._box, 'data-timeout-letter',
+          DEFAULTS['data-timeout-letter']);
+      var timeout_wait = get_value(this._box, 'data-timeout-wait',
+          DEFAULTS['data-timeout-wait']);
+      var max_iterations = get_value(this._box, 'data-iterations',
+          DEFAULTS['data-iterations']);
       this._parts.push(new Typebox(
         part,
         this._should_cycle,
         timeout_letter,
-        timeout_wait)
+        timeout_wait,
+        max_iterations)
       );
     },
     
