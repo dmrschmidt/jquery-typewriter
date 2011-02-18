@@ -6,6 +6,20 @@ body {
   font-size: 1em;
 }
 
+pre {
+  padding: 0.5em;
+  background-color: black;
+  display: block;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: normal;
+  overflow: hidden;
+}
+
+pre:hover {
+  overflow: auto;
+} 
+
 #typewriter {
   z-index: 1;
   position: absolute;
@@ -13,11 +27,72 @@ body {
   top: 0;
 }
 
+#navigation {
+  z-index: 3;
+  width: 10em;
+  height: 10em;
+  position: absolute;
+  top: 0;
+  left: 32em;
+  height: 3em;
+  width: 25em;
+  margin: auto;
+  background: url(../images/bg.png);
+  -webkit-border-bottom-left-radius: 0.5em;
+  -webkit-border-bottom-right-radius: 0.5em;
+  box-shadow: 0px 0px 20px #000;
+  -webkit-box-shadow: 0px 0px 20px #000;
+  -webkit-moz-shadow: 0px 0px 20px #000;
+  border: 2px solid #303030;
+}
+
+#navigation li {
+  list-style-type: none;
+  float: left;
+  display: block;
+}
+
+#navigation li a.active {
+  line-height: 2.0em;
+/*  color: #999;*/
+}
+
+#navigation li a.download {
+  color: #74674e;
+}
+
+#navigation li a.download:hover {
+  color: #baa781;
+}
+
+#navigation li a {
+  -webkit-box-shadow: 0px 2px 3px #555;
+  -moz-box-shadow: 0px 2px 3px #555;
+  text-decoration: none;
+  color: #555;
+  text-shadow: 0px 2px 3px #171717;
+  background-color: #222;
+  margin-left: 1em;
+  padding: 0.5em;
+  padding-bottom: 0.5em;
+/*  line-height: 2.0em;*/
+  -webkit-border-bottom-left-radius: 0.5em;
+  -webkit-border-bottom-right-radius: 0.5em;
+/*  -webkit-box-shadow: 0px 2px 3px #555;
+  -moz-box-shadow: 0px 2px 3px #555;*/
+}
+
+#navigation li a:hover {
+  line-height: 2.0em;
+/*  background: url(../images/manila_bg2.gif);*/
+}
+
 h1 {
   rotation: -2deg;
   -webkit-transform: rotate(-2deg);
   -moz-transform: rotate(-2deg);
   background:#404040;
+  background: url(../images/bg.png);
   color:#303030;
   text-shadow: -1px -1px 0px #101010, 1px 1px 0px #505050;
   z-index: 3;
@@ -33,9 +108,11 @@ h1 {
 /*  -moz-bottom-right-border-radius: 1em;*/
   -webkit-border-bottom-right-radius: 0.5em;
   box-shadow: 0px 0px 20px #000;
+  -webkit-box-shadow: 0px 0px 20px #000;
+  -webkit-moz-shadow: 0px 0px 20px #000;
 }
 
-#explanation {
+#explanation, #documentation {
   font-size: 0.8em;
   padding: 0.5em;
   padding-right: 1em;
@@ -47,13 +124,27 @@ h1 {
   left: 27em;
   top: 3em;
   width: 35em;
-  height: 20em;
   opacity: 0.8;
   -webkit-border-radius: 0.5em;
   -moz-border-radius: 0.5em;
 }
 
-#explanation h2 {
+#explanation {
+  height: 20em;
+}
+
+#documentation {
+  height: 80%;
+  overflow: auto;
+  opacity: 0.9;
+  border: 1px solid #eee;
+}
+
+#documentation h4 {
+  text-align: right;
+}
+
+#explanation h2, #documentation h2 {
   font-size: 1.8em;
   text-align: right;
 }
